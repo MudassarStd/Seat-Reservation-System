@@ -10,4 +10,5 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException::class)
     fun handleNotFound(exception: ResourceNotFoundException): String = exception.message ?: "Not found"
 
+
 }

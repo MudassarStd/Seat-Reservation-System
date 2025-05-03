@@ -1,8 +1,10 @@
 package com.std.seat_reservation.config
 
 import com.std.seat_reservation.service.CustomUserDetailsService
+import com.std.seat_reservation.component.JwtFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -23,25 +25,30 @@ class SecurityConfig(
     fun passwordEncoder() = BCryptPasswordEncoder()
 
     @Bean
+    fun authManager(config: AuthenticationConfiguration) = config.authenticationManager
+
+    @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.anyRequest().authenticated()
+                it.requestMatchers("/auth/**").permitAll()
+                    .anyRequest().authenticated()
+
             }
             .userDetailsService(userDetails)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
 
-    @Bean
-    fun cors(): WebMvcConfigurer = object: WebMvcConfigurer {
-        override fun addCorsMappings(registry: CorsRegistry) {
-            registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-        }
-    }
+//    @Bean
+//    fun cors(): WebMvcConfigurer = object: WebMvcConfigurer {
+//        override fun addCorsMappings(registry: CorsRegistry) {
+//            registry.addMapping("/**")
+//                .allowedOrigins("*")
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                .allowedHeaders("*")
+//        }
+//    }
 }
