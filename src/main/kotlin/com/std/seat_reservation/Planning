@@ -1,0 +1,53 @@
+Database (MySQL) schema:
+
+Entities:
+- User (id, name, email, password, role, isAllowed)
+- Movie (id, name, description, rating, release_date, duration, genre_id, posterUrl, is_featured)
+- Movie_Review (id, review, user_id, movie_id) => Optional
+- Genre (id, name, created_at)
+- Theatre (id, name, location, seats)
+- Booking (id, user_id, show_time_id, seats, status = active, created_at, updated_at)
+- ShowTime (id, movie_id, theatre_id, available_seats, date, start_time, end_time, created_at, updated_at)
+
+We could have a time_slot feature: start_time & end_time
+
+Mock User flow:
+user clicks book movie -> movie details page contains a list of showTimes
+
+Actors: Admin && User
+
+=========== Endpoints ===========
+
+BASE URL: localhost:8080/api
+/movies => POST (create a new movie), GET (all)
+/movies/?genre&rating&duration => GET (all by filter parameters)
+/movies/{id} => PATCH, PUT & DELETE for admin, GET (to get details)
+
+Search:
+/movies/?name
+
+FOR ADMIN ONLY:
+/users => GET
+/users/{id} => GET, DELETE, PATCH (to update access) user details page (user-bookings, update-user-access, cancel-booking)
+/users/{id}/bookings => get all user bookings
+/users/{user_id}/bookings/{booking_id} => PUT, DELETE(cancel)
+
+/bookings => GET, POST
+/bookings/{id} => PUT
+
+/genres => GET, POST
+/genres/{name as:id} => DELETE, PUT
+
+/showtimes?date&timeSlot => GET, POST
+/showtimes/{id} => PUT, DELETE  :sideEffect -> cancel all bookings for this show
+
+/showtimes/{id}/bookings => PUT (Cancel)
+
+==============================================================
+======================= Later Features =======================
+==============================================================
+Add pagination and sorting
+For /movies, /users, /bookings
+
+Authentication Layer
+JWT-based login, register, role-based guard

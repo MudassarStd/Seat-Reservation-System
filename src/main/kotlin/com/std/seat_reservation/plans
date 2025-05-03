@@ -1,0 +1,6 @@
+- JWT based auth
+- user registers/login, gets token and uses token for subsequent requests.
+- Endpoints have role-based-access
+
+POST,PUT,DELETE: /movies => Admin only
+Get: /movies => any user
