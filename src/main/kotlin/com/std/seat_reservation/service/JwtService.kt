@@ -16,8 +16,10 @@ class JwtService {
     private val logger = LoggerFactory.getLogger(JwtService::class.java)
 
     fun generateToken(email: String): String {
+
         return Jwts.builder()
-            .setClaims(Jwts.claims().setSubject(email))
+            .setSubject(email)
+//            .addClaims(roles)
             .setIssuedAt(Date())
             .setExpiration(Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
             .signWith(
@@ -44,6 +46,8 @@ class JwtService {
     fun extractEmail(token: String): String? {
         return extractClaims(token)?.subject
     }
+
+    fun extractRole(token: String) = extractClaims(token)?.get("role") as? String
 
     private fun extractClaims(token: String): Claims? {
         return try {

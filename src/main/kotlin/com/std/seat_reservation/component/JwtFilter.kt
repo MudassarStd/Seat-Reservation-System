@@ -64,7 +64,6 @@ class JwtFilter(
             filterChain.doFilter(request, response)
             throw ResourceNotFoundException("Email not found: JwtFilter::class")
         }
-
         filterChain.doFilter(request, response)
     }
 }

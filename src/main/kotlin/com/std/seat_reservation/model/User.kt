@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
@@ -14,14 +15,16 @@ data class User(
     val name: String = "",
     val email: String,
     private val password: String,
-    val role: Role = Role.User,
+    val role: Role = Role.USER,
     val isAllowed: Boolean? = null
 ): UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> = emptyList()
+
+    override fun getAuthorities(): Collection<GrantedAuthority> =
+        listOf(SimpleGrantedAuthority(role.toAuthority()))
 
     override fun getPassword() = password
 
-    override fun getUsername() = name
+    override fun getUsername() = email
 
     override fun isAccountNonExpired() = true
 
@@ -32,4 +35,7 @@ data class User(
     override fun isEnabled() = true
 }
 
-enum class Role {Admin, User}
+enum class Role {
+    ADMIN, USER;
+    fun toAuthority() = "ROLE_${this.name}"
+}

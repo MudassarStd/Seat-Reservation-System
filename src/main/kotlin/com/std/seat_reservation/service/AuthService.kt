@@ -2,6 +2,7 @@ package com.std.seat_reservation.service
 
 import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.AuthResponse
+import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toUser
 import com.std.seat_reservation.repository.UserRepository
 import org.springframework.security.authentication.AuthenticationManager

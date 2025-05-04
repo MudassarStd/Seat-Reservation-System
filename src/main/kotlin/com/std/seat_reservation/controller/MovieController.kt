@@ -3,6 +3,7 @@ package com.std.seat_reservation.controller
 import com.std.seat_reservation.model.Movie
 import com.std.seat_reservation.service.MovieService
 import org.slf4j.LoggerFactory
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class MovieController(
     private val movieService: MovieService
 ) {
+
     @PostMapping
     fun add(@RequestBody movie: Movie) = movieService.add(movie)
 
@@ -29,6 +31,5 @@ class MovieController(
 
     @GetMapping("/id")
     fun getById(@PathVariable id: Long) = movieService.getById(id)
-
 
 }
