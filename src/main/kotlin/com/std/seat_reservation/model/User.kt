@@ -1,6 +1,7 @@
 package com.std.seat_reservation.model
 
 import jakarta.persistence.Entity
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -15,6 +16,7 @@ data class User(
     val name: String = "",
     val email: String,
     private val password: String,
+    @Enumerated
     val role: Role = Role.USER,
     val isAllowed: Boolean? = null
 ): UserDetails {

@@ -4,14 +4,16 @@ import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.AuthResponse
 import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toUser
+import com.std.seat_reservation.model.User
 import com.std.seat_reservation.repository.UserRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.CrossOrigin
 import java.security.Principal
-
+//@CrossOrigin(origins = ["http://localhost:3000"])
 @Service
 class AuthService(
     private val userRepository: UserRepository,
@@ -30,5 +32,4 @@ class AuthService(
         return AuthResponse(token = jwtService.generateToken(request.email))
     }
 
-    fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication as Principal
 }
