@@ -1,6 +1,8 @@
 package com.std.seat_reservation.service
 
+import com.std.seat_reservation.dto.BookingRequest
 import com.std.seat_reservation.exception.ResourceNotFoundException
+import com.std.seat_reservation.mapper.toBooking
 import com.std.seat_reservation.model.Booking
 import com.std.seat_reservation.model.BookingStatus
 import com.std.seat_reservation.repository.BookingRepository
@@ -9,11 +11,13 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import kotlin.math.atan
 
-// Bookings Operations:
+// Bookings Operations: AdminOnly && user-specific
 
 @Service
 class BookingService(
-    private val bookingRepository: BookingRepository
+    private val bookingRepository: BookingRepository,
+    private val authService: AuthService,
+    private val showtimeService: ShowtimeService
 ) {
     // TODO: Validate (showtime and seats before adding)
     fun add(booking: Booking) = bookingRepository.save(booking)
@@ -32,27 +36,39 @@ class BookingService(
             )
         )
     }
-
     @Transactional
-    fun updateMyBooking(booking: Booking) {
+    fun createMyBooking(request: BookingRequest) {
+        val user = authService.getCurrentAuthenticatedUser()
+        val showtime = showtimeService.getById(request.showtimeId)
         bookingRepository.save(
-            getByUserId(SecurityUtil.getCurrentAuthenticatedUser().id).copy(
-                seats = booking.seats,
-                status = booking.status
+            request.toBooking(
+                user = user,
+                showtime = showtime
             )
         )
-        TODO(reason = "Also update seat count in showtime on update of seats or status")
+        showtimeService.updateSeatsOnBookingById(request.showtimeId, request.seats)
+    }
+
+    @Transactional
+    fun updateMyBooking(request: BookingRequest) {
+        bookingRepository.save(
+            getByUserId(authService.getCurrentAuthenticatedUser().id).copy(
+                seats = request.seats,
+//                status = booking.status
+            )
+        )
+        showtimeService.updateSeatsOnBookingById(request.showtimeId, request.seats)
     }
 
     // later add filters such as movies, show times or theaters
-    fun getMyBookings() = getBookingsByUserId(SecurityUtil.getCurrentAuthenticatedUser().id)
+    fun getMyBookings() = getBookingsByUserId(authService.getCurrentAuthenticatedUser().id)
 
-    fun deleteMyBooking() = bookingRepository.deleteByUserId(SecurityUtil.getCurrentAuthenticatedUser().id)
+    fun deleteMyBooking() = bookingRepository.deleteByUserId(authService.getCurrentAuthenticatedUser().id)
 
     @Transactional
     fun cancelMyBooking(bookingId: Long) {
         val booking = getById(bookingId).let {
-            if (it.user == SecurityUtil.getCurrentAuthenticatedUser()) it else null
+            if (it.user == authService.getCurrentAuthenticatedUser()) it else null
         }
         booking?.let {
             bookingRepository.save(
@@ -60,9 +76,8 @@ class BookingService(
                         status = BookingStatus.Cancelled
                     )
             )
+            showtimeService.updateSeatsOnCancellationById(booking.showtime.id, booking.seats)
         }
-
-        TODO(reason = "Update show time seats count")
     }
 
     fun cancelAllByUserId(userId: Long) {
@@ -80,5 +95,4 @@ class BookingService(
         bookingRepository.findByUserId(id).orElseThrow { ResourceNotFoundException("Not found") }
 
     fun getBookingsByUserId(userId: Long) = bookingRepository.findAllByUserId(userId) ?: throw ResourceNotFoundException("Not found")
-
 }

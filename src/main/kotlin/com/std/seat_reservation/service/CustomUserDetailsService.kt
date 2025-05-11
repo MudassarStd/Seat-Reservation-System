@@ -5,8 +5,9 @@ import com.std.seat_reservation.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class CustomUserDetailsService(
     private val userRepository: UserRepository
 ): UserDetailsService {

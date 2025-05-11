@@ -1,15 +1,11 @@
 package com.std.seat_reservation.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
+import jakarta.persistence.*
 
 @Entity
 data class Booking(
-    @Id
-    val id: Long,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
     @OneToOne @JoinColumn(name = "userId")
     val user: User,
     @OneToOne @JoinColumn(name = "showtimeId")

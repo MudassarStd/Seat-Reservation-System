@@ -32,4 +32,6 @@ class AuthService(
         return AuthResponse(token = jwtService.generateToken(request.email))
     }
 
+    fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User
+
 }

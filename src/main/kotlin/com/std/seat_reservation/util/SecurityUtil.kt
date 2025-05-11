@@ -4,5 +4,4 @@ import com.std.seat_reservation.model.User
 import org.springframework.security.core.context.SecurityContextHolder
 
 object SecurityUtil {
-    fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User
 }
