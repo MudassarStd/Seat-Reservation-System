@@ -1,7 +1,9 @@
 package com.std.seat_reservation.service
 
 import com.std.seat_reservation.dto.ShowtimeRequest
+import com.std.seat_reservation.dto.ShowtimeResponse
 import com.std.seat_reservation.exception.ResourceNotFoundException
+import com.std.seat_reservation.mapper.toResponse
 import com.std.seat_reservation.mapper.toShowtime
 import com.std.seat_reservation.model.Showtime
 import com.std.seat_reservation.repository.ShowtimeRepository
@@ -19,11 +21,13 @@ class ShowtimeService(
 
     fun add(request: ShowtimeRequest) {
         val movie = movieService.getById(request.movieId)
-        val theater = theaterService.getById(request.theaterId)
+//        val theater = theaterService.getById(request.theaterId)
         showtimeRepository.save(
-            request.toShowtime(movie, theater)
+            request.toShowtime(movie, request.theaterName)
         )
     }
+
+    fun getAll(): List<ShowtimeResponse> = showtimeRepository.findAll().map { it.toResponse() }
 
     // del a showtime
     // cancel all bookings on that showtime

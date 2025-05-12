@@ -3,6 +3,7 @@ package com.std.seat_reservation.mapper
 import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.BookingRequest
 import com.std.seat_reservation.dto.ShowtimeRequest
+import com.std.seat_reservation.dto.ShowtimeResponse
 import com.std.seat_reservation.model.*
 
 fun AuthRequest.toUser(hashedPassword: String) = User(
@@ -16,7 +17,7 @@ fun BookingRequest.toBooking(user: User, showtime: Showtime) = Booking(
     seats = this.seats
 )
 
-fun ShowtimeRequest.toShowtime(movie: Movie, theater: Theater) = Showtime(
+fun ShowtimeRequest.toShowtime(movie: Movie, theater: String) = Showtime(
     movie = movie,
     theater = theater,
     availableSeats = this.availableSeats,
@@ -24,3 +25,16 @@ fun ShowtimeRequest.toShowtime(movie: Movie, theater: Theater) = Showtime(
     startTime = this.startTime,
     endTime = this.endTime
 )
+
+fun Showtime.toResponse(): ShowtimeResponse {
+    return ShowtimeResponse(
+        id = this.id,
+        movieId = this.movie.id,
+        theater = this.theater,
+        availableSeats = this.availableSeats,
+        date = this.date,
+        startTime = this.startTime,
+        endTime = this.endTime
+    )
+}
+

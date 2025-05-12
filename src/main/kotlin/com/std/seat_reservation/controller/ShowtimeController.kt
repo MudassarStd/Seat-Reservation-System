@@ -16,4 +16,7 @@ class ShowtimeController(
 ) {
     @PostMapping
     fun add(@RequestBody showtimeRequest: ShowtimeRequest) = showtimeService.add(showtimeRequest)
+
+    @GetMapping
+    fun getAll() = showtimeService.getAll()
 }

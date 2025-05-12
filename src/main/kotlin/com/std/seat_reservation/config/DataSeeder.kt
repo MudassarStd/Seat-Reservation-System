@@ -31,6 +31,7 @@ class DataSeeder {
 //        movieRepository.deleteAll()
 //        theaterRepository.deleteAll()
 //        showtimeRepository.deleteAll()
+
 //        userRepository.deleteAll()
         // 1. Seed Admin User
         val existingAdmin = userRepository.findByEmail("admin@cineplex.com")

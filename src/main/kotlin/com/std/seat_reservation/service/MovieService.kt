@@ -37,8 +37,9 @@ class MovieService(
 
     fun deleteById(id: Long): String {
         movieRepository.deleteById(id)
-        // TODO: update booking status to cancellation after deletion, MAKE this ATOMIC operation
         // Booking must be cancelled if movie is deleted
         return "Deleted Successfully"
     }
+//         TODO: update booking status to cancellation after deletion, MAKE this ATOMIC operation
+
 }

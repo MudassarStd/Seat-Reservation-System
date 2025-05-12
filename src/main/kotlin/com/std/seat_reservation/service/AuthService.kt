@@ -2,6 +2,7 @@ package com.std.seat_reservation.service
 
 import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.AuthResponse
+import com.std.seat_reservation.dto.UserResponse
 import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toUser
 import com.std.seat_reservation.model.User
@@ -23,15 +24,14 @@ class AuthService(
 ) {
     fun register(request: AuthRequest): AuthResponse {
         userRepository.save(request.toUser(bCryptPasswordEncoder.encode(request.password)))
-        return AuthResponse(token = jwtService.generateToken(request.email))
+        return AuthResponse(token = jwtService.generateToken(request.email), UserResponse(name = "Admin", email = "admin@cineplex.com", role = "ADMIN"))
     }
 
     fun login(request: AuthRequest): AuthResponse {
         val authToken = UsernamePasswordAuthenticationToken(request.email, request.password)
         authManager.authenticate(authToken)
-        return AuthResponse(token = jwtService.generateToken(request.email))
+        return AuthResponse(token = jwtService.generateToken(request.email), UserResponse(name = "Admin", email = "admin@cineplex.com", role = "ADMIN"))
     }
 
     fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User
-
 }

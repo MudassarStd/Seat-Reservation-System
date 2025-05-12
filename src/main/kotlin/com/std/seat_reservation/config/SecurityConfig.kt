@@ -32,6 +32,7 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
+            .cors {  }
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
@@ -39,6 +40,7 @@ class SecurityConfig(
                     requestMatchers("/auth/**").permitAll()
                     requestMatchers(HttpMethod.POST, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.DELETE, "/movies/**").hasRole(Role.ADMIN.name)
+                    requestMatchers(HttpMethod.PUT, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.GET, "/movies/**").hasAnyRole(Role.ADMIN.name, Role.USER.name)
                     requestMatchers(HttpMethod.POST, "/theaters/**").hasAnyRole(Role.ADMIN.name)
 //                    requestMatchers(HttpMethod.POST, "/showtimes/**").hasAnyRole(Role.ADMIN.name)
@@ -59,5 +61,4 @@ class SecurityConfig(
                 .allowedHeaders("*")
         }
     }
-
 }

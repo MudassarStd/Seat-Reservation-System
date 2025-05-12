@@ -12,6 +12,18 @@ class TheaterService(
 
     fun add(theater: Theater) = theaterRepository.save(theater)
     fun getAll() = theaterRepository.findAll()
+    fun update(id: Long, theater: Theater) {
+        theaterRepository.save(
+            getById(id).copy(
+                name = theater.name,
+                location = theater.location,
+                seats = theater.seats
+            )
+        )
+    }
+
+
+//    fun delete()
 
     fun getById(id: Long) = theaterRepository.findById(id).orElseThrow { ResourceNotFoundException("Not found") }
 }
