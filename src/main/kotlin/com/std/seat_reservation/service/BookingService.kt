@@ -3,6 +3,7 @@ package com.std.seat_reservation.service
 import com.std.seat_reservation.dto.BookingRequest
 import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toBooking
+import com.std.seat_reservation.mapper.toBookingResponse
 import com.std.seat_reservation.model.Booking
 import com.std.seat_reservation.model.BookingStatus
 import com.std.seat_reservation.repository.BookingRepository
@@ -36,6 +37,7 @@ class BookingService(
             )
         )
     }
+
     @Transactional
     fun createMyBooking(request: BookingRequest) {
         val user = authService.getCurrentAuthenticatedUser()
@@ -94,5 +96,7 @@ class BookingService(
     fun getByUserId(id: Long) =
         bookingRepository.findByUserId(id).orElseThrow { ResourceNotFoundException("Not found") }
 
-    fun getBookingsByUserId(userId: Long) = bookingRepository.findAllByUserId(userId) ?: throw ResourceNotFoundException("Not found")
+    fun getBookingsByUserId(userId: Long) = bookingRepository.findAllByUserId(userId)?.map {
+        it.toBookingResponse()
+    } ?: throw ResourceNotFoundException("Not found")
 }

@@ -32,6 +32,11 @@ class ShowtimeService(
         showtimeRepository.save(showtime)
     }
 
+    fun getByMovie(id: Long): List<ShowtimeResponse> {
+        return showtimeRepository.findByMovie(movieService.getById(id))?.map { it.toResponse() }
+            ?: throw ResourceNotFoundException("No show times found for given movie id")
+    }
+
     fun deleteById(id: Long) {
         if (!showtimeRepository.existsById(id)) {
             throw ResourceNotFoundException("Showtime with ID $id not found.")

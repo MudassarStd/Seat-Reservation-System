@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 class ShowtimeController(
     private val showtimeService: ShowtimeService
 ) {
-
     @PostMapping
     fun add(@Valid @RequestBody showtimeRequest: ShowtimeRequest) = showtimeService.add(showtimeRequest)
 

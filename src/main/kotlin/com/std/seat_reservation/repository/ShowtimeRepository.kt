@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ShowtimeRepository: JpaRepository<Showtime, Long> {
     fun existsByMovie(movie: Movie): Boolean
+    fun findByMovie(movie: Movie): List<Showtime>?
 }

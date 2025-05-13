@@ -3,6 +3,7 @@ package com.std.seat_reservation.service
 import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.AuthResponse
 import com.std.seat_reservation.dto.UserResponse
+import com.std.seat_reservation.dto.toAuthResponse
 import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toUser
 import com.std.seat_reservation.model.User
@@ -22,15 +23,18 @@ class AuthService(
     private val authManager: AuthenticationManager,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
+
     fun register(request: AuthRequest): AuthResponse {
-        userRepository.save(request.toUser(bCryptPasswordEncoder.encode(request.password)))
-        return AuthResponse(token = jwtService.generateToken(request.email), UserResponse(name = "Admin", email = "admin@cineplex.com", role = "ADMIN"))
+        val newUser = request.toUser(bCryptPasswordEncoder.encode(request.password))
+        userRepository.save(newUser)
+        return AuthResponse(token = jwtService.generateToken(request.email), newUser.toAuthResponse())
     }
 
     fun login(request: AuthRequest): AuthResponse {
         val authToken = UsernamePasswordAuthenticationToken(request.email, request.password)
         authManager.authenticate(authToken)
-        return AuthResponse(token = jwtService.generateToken(request.email), UserResponse(name = "Admin", email = "admin@cineplex.com", role = "ADMIN"))
+        val user = userRepository.findByEmail(request.email) ?: throw ResourceNotFoundException("User for ${request.email} does not exist")
+        return AuthResponse(token = jwtService.generateToken(request.email), user.toAuthResponse())
     }
 
     fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User

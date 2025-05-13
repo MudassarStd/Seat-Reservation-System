@@ -1,5 +1,6 @@
 package com.std.seat_reservation.dto
 
+import com.std.seat_reservation.model.BookingStatus
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
@@ -11,6 +12,12 @@ import java.time.LocalTime
 data class BookingRequest(
     val seats: Int,
     val showtimeId: Long
+)
+
+data class BookingResponse(
+    val seats: Int,
+    val status: BookingStatus,
+    val showtime: ShowtimeResponse
 )
 
 data class ShowtimeRequest (
