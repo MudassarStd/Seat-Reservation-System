@@ -43,7 +43,7 @@ class SecurityConfig(
                     requestMatchers(HttpMethod.PUT, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.GET, "/movies/**").hasAnyRole(Role.ADMIN.name, Role.USER.name)
                     requestMatchers(HttpMethod.POST, "/theaters/**").hasAnyRole(Role.ADMIN.name)
-//                    requestMatchers(HttpMethod.POST, "/showtimes/**").hasAnyRole(Role.ADMIN.name)
+                    requestMatchers(HttpMethod.POST, "/showtimes/**").hasAnyRole(Role.ADMIN.name)
                     anyRequest().authenticated()
                 }
             }
