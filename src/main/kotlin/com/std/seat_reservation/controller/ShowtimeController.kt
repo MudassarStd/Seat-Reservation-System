@@ -17,16 +17,17 @@ import org.springframework.web.bind.annotation.RestController
 class ShowtimeController(
     private val showtimeService: ShowtimeService
 ) {
+
     @PostMapping
     fun add(@Valid @RequestBody showtimeRequest: ShowtimeRequest) = showtimeService.add(showtimeRequest)
 
     @GetMapping
     fun getAll() = showtimeService.getAll()
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = showtimeService.deleteById(id)
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody showtimeRequest: ShowtimeRequest) =
         showtimeService.update(id, showtimeRequest)
 }
