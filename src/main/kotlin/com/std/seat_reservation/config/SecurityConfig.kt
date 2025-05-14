@@ -22,7 +22,6 @@ class SecurityConfig(
     private val userDetails: CustomUserDetailsService,
     private val jwtFilter: JwtFilter
 ) {
-
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder()
 

@@ -8,8 +8,7 @@ import org.hibernate.annotations.OnDeleteAction
 data class Booking(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    @ManyToOne
-    @JoinColumn(name = "userId")
+    @ManyToOne @JoinColumn(name = "userId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     val user: User,
     @ManyToOne @JoinColumn(name = "showtimeId")

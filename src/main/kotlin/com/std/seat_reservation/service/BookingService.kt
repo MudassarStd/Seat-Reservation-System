@@ -63,23 +63,27 @@ class BookingService(
     }
 
     // later add filters such as movies, show times or theaters
-    fun getMyBookings() = getBookingsByUserId(authService.getCurrentAuthenticatedUser().id)
-
-    fun deleteMyBooking() = bookingRepository.deleteByUserId(authService.getCurrentAuthenticatedUser().id)
+    fun getMyBookings(status: BookingStatus?) = getBookingsByUserId(authService.getCurrentAuthenticatedUser().id, status)
 
     @Transactional
-    fun cancelMyBooking(bookingId: Long) {
+    fun deleteMyBooking(id: Long) {
+        cancelMyBooking(id) // validates that booking belongs to user + update seat count of showtime
+        bookingRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun cancelMyBooking(bookingId: Long): String {
         val booking = getById(bookingId).let {
-            if (it.user == authService.getCurrentAuthenticatedUser()) it else null
+            if (it.user == authService.getCurrentAuthenticatedUser()) it else throw ResourceNotFoundException("This booking does not belong to you")
         }
-        booking?.let {
-            bookingRepository.save(
-                    it.copy(
-                        status = BookingStatus.Cancelled
-                    )
+        bookingRepository.save(
+            booking.copy(
+                status = BookingStatus.Cancelled
             )
-            showtimeService.updateSeatsOnCancellationById(booking.showtime.id, booking.seats)
-        }
+        )
+        if (booking.status != BookingStatus.Cancelled) showtimeService.updateSeatsOnCancellationById(booking.showtime.id, booking.seats)
+
+        return "Booking cancelled"
     }
 
     fun cancelAllByUserId(userId: Long) {
@@ -96,7 +100,9 @@ class BookingService(
     fun getByUserId(id: Long) =
         bookingRepository.findByUserId(id).orElseThrow { ResourceNotFoundException("Not found") }
 
-    fun getBookingsByUserId(userId: Long) = bookingRepository.findAllByUserId(userId)?.map {
+    fun getBookingsByUserId(userId: Long, status: BookingStatus? = null) = bookingRepository.findAllByUserId(userId)?.filter{
+        it.status == status || status == null
+    }?.map {
         it.toBookingResponse()
     } ?: throw ResourceNotFoundException("Not found")
 }

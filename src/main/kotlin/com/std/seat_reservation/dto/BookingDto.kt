@@ -10,6 +10,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 data class BookingRequest(
+    @field:Min(1)
     val seats: Int,
     val showtimeId: Long
 )
