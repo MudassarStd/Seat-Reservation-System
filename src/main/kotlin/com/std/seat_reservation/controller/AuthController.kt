@@ -31,4 +31,12 @@ class AuthController(
         logger.info("Got in login controller with request $authRequest")
         return authService.login(authRequest)
     }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(
+        @RequestBody authRequest: AuthRequest
+    ): AuthResponse {
+        logger.info("Got in password reset controller with request $authRequest")
+        return authService.resetPassword(authRequest)
+    }
 }

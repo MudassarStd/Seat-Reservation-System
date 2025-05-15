@@ -37,11 +37,13 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.apply {
                     requestMatchers("/auth/**").permitAll()
+                    requestMatchers(HttpMethod.POST, "/movies/*/reviews").hasRole(Role.USER.name)
                     requestMatchers(HttpMethod.POST, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.DELETE, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.PUT, "/movies/**").hasRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.POST, "/theaters/**").hasAnyRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.POST, "/showtimes/**").hasAnyRole(Role.ADMIN.name)
+                    requestMatchers(HttpMethod.DELETE, "/showtimes/**").hasAnyRole(Role.ADMIN.name)
                     requestMatchers(HttpMethod.GET, "/movies/**").permitAll()
                     requestMatchers(HttpMethod.GET, "/showtimes/**").permitAll()
                     anyRequest().authenticated()

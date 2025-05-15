@@ -12,10 +12,11 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.CrossOrigin
 import java.security.Principal
-//@CrossOrigin(origins = ["http://localhost:3000"])
+
 @Service
 class AuthService(
     private val userRepository: UserRepository,
@@ -38,4 +39,13 @@ class AuthService(
     }
 
     fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User
+
+    fun resetPassword(authRequest: AuthRequest): AuthResponse {
+        val user = userRepository.findByEmail(authRequest.email) ?: throw ResourceNotFoundException("User for ${authRequest.email} does not exist")
+        val newPassword = bCryptPasswordEncoder.encode(authRequest.password)
+        userRepository.save(user.copy(
+            password = newPassword
+        ))
+        return AuthResponse(token = jwtService.generateToken(authRequest.email), user.toAuthResponse())
+    }
 }

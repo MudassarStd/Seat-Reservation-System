@@ -36,7 +36,6 @@ class BookingController(
     fun cancelMyBooking(@PathVariable id: Long) = bookingService.cancelMyBooking(id)
 
     // Test above, all working fine
-
     @DeleteMapping("/me/{id}")
     fun deleteMyBooking(@PathVariable id: Long) = bookingService.deleteMyBooking(id)
 

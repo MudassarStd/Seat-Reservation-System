@@ -40,3 +40,17 @@ fun Booking.toBookingResponse() = BookingResponse(
     status = this.status,
     showtime = this.showtime.toResponse()
 )
+
+fun ReviewRequest.toReview(user: User, movie: Movie) = Review(
+    user = user,
+    movie = movie,
+    rating = this.rating,
+    comment = this.comment
+)
+
+fun Review.toResponse() = ReviewResponse(
+    id = this.id,
+    rating = this.rating,
+    comment = this.comment,
+    dateTime = this.datetime
+)
