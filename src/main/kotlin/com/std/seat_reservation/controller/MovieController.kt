@@ -35,6 +35,11 @@ class MovieController(
         @RequestParam(required = false) releaseDate: LocalDate?
     ) = movieService.getAll(genre, rating, releaseDate)
 
+
+    // **************************************************************************
+    // **************************** Nested Resources ****************************
+    // **************************************************************************
+
     @GetMapping("/{id}/showtimes")
     fun getShowtimesByMovie(@PathVariable id: Long) = showtimeService.getByMovie(id)
 
@@ -46,6 +51,7 @@ class MovieController(
 
     @GetMapping("/{id}/reviews")
     fun getReviews(@PathVariable id: Long) = reviewService.getAllByMovie(id)
+
 
 //    @GetMapping("/recommendations")
 //    fun getRecommendations() = movieService.getRecommendations()

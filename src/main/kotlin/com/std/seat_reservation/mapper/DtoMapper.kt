@@ -49,8 +49,9 @@ fun ReviewRequest.toReview(user: User, movie: Movie) = Review(
 )
 
 fun Review.toResponse() = ReviewResponse(
-    id = this.id,
-    rating = this.rating,
-    comment = this.comment,
-    dateTime = this.datetime
+    id = id,
+    userId = user.id,
+    rating = rating,
+    comment = comment,
+    createdAt = createdAt
 )

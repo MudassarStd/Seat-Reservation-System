@@ -9,7 +9,8 @@ data class ReviewRequest(
 
 data class ReviewResponse(
     val id: Long,
+    val userId: Long,
     val rating: Int,
     val comment: String,
-    val dateTime: LocalDateTime
+    val createdAt: LocalDateTime?
 )

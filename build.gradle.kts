@@ -30,6 +30,7 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 	// jwt
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")

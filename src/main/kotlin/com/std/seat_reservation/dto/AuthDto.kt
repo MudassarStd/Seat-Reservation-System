@@ -17,12 +17,14 @@ data class AuthResponse(
 )
 
 data class UserResponse(
+    val id: Long,
     val name: String,
     val email: String,
     val role: String
 )
 
 fun User.toAuthResponse() = UserResponse(
+    id = this.id,
     name = this.name,
     email = this.email,
     role = this.role.toString()
