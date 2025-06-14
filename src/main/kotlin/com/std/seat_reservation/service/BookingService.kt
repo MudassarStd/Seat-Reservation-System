@@ -8,10 +8,8 @@ import com.std.seat_reservation.model.Booking
 import com.std.seat_reservation.model.BookingStatus
 import com.std.seat_reservation.model.Role
 import com.std.seat_reservation.repository.BookingRepository
-import com.std.seat_reservation.util.SecurityUtil
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import kotlin.math.atan
 
 // Bookings Operations: AdminOnly && user-specific
 
@@ -20,7 +18,8 @@ class BookingService(
     private val bookingRepository: BookingRepository,
     private val authService: AuthService,
     private val showtimeService: ShowtimeService,
-    private val ticketService: TicketService
+    private val ticketService: TicketService,
+    private val notificationService: NotificationService
 ) {
     // TODO: Validate (showtime and seats before adding)
     fun add(booking: Booking) = bookingRepository.save(booking)
@@ -51,6 +50,7 @@ class BookingService(
             )
         )
         showtimeService.updateSeatsOnBookingById(request.showtimeId, request.seats)
+        notificationService.add("You have successfully booked ${request.seats} seats for ${showtime.movie.title}", user)
 //        ticketService.createTickets(seats = request.seats, )
     }
 
@@ -89,7 +89,7 @@ class BookingService(
             booking.showtime.id,
             booking.seats
         )
-
+        notificationService.add("Your booking has been cancelled for ${booking.showtime.movie.title}", booking.user)
         return "Booking cancelled"
     }
 

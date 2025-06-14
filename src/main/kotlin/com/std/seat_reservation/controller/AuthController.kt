@@ -40,7 +40,6 @@ class AuthController(
         @RequestBody request: ProfileUpdateRequest
     ) = authService.updateProfile(request)
 
-
     @PostMapping("/change-password")
     fun changePassword(
         @RequestBody request: PasswordResetRequest
@@ -48,6 +47,4 @@ class AuthController(
         logger.info("Got in password reset controller with request $request")
         return authService.changePassword(request)
     }
-
-
 }
