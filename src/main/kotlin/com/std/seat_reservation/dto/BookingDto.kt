@@ -16,10 +16,26 @@ data class BookingRequest(
 )
 
 data class BookingResponse(
+    val id: Long,
     val seats: Int,
     val status: BookingStatus,
-    val showtime: ShowtimeResponse
+    val ticketNumber: Int,
+    val showStartTime: LocalTime,
+    val showEndTime: LocalTime,
+    val showDate: LocalDate,
+    val userEmail: String,
+    val movieTitle: String,
+    val theater: String
+//    val showtimeId:
 )
+
+//data class BookingAdminResponse(
+//    val id: Long,
+//    val seats: Int,
+//    val status: BookingStatus,
+//    val ticketNumber: Int,
+//    val showtime:
+//)
 
 data class ShowtimeRequest (
     @field:NotNull

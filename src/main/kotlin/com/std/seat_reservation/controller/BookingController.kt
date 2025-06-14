@@ -21,7 +21,7 @@ class BookingController(
     private val bookingService: BookingService
 ) {
     @GetMapping
-    fun getAll() = bookingService.getAll()
+    fun getAll() = bookingService.getAllBookings()
 
     @PostMapping
     fun add(@RequestBody booking: Booking) = bookingService.add(booking)
@@ -32,13 +32,16 @@ class BookingController(
     @GetMapping("/me")
     fun getMyBookings(@RequestParam status: BookingStatus? = null) = bookingService.getMyBookings(status)
 
-    @DeleteMapping("/me/cancel/{id}")
+    @PutMapping("{id}/cancel/me")
     fun cancelMyBooking(@PathVariable id: Long) = bookingService.cancelMyBooking(id)
 
+    @PutMapping("{id}/cancel")
+    fun cancelBooking(@PathVariable id: Long) = bookingService.cancelMyBooking(id)
+
     // Test above, all working fine
-    @DeleteMapping("/me/{id}")
+    @DeleteMapping("{id}/me")
     fun deleteMyBooking(@PathVariable id: Long) = bookingService.deleteMyBooking(id)
 
-    @PutMapping("/me")
-    fun updateMyBooking(@Valid @RequestBody request: BookingRequest) = bookingService.updateMyBooking(request)
+    @PutMapping("{id}/me")
+    fun updateMyBooking(@RequestBody request: BookingRequest, @PathVariable id: Long) = bookingService.updateMyBooking(id, request.seats)
 }

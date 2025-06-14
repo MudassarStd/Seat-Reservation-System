@@ -76,9 +76,9 @@ class ShowtimeService(
         )
     }
 
-    fun updateSeatsOnCancellationById(id: Long, requestedSeats: Int) {
+    fun updateSeatsOnCancellationById(id: Long, seats: Int) {
         val showtime = getById(id)
-        val newSeatCount = showtime.availableSeats + requestedSeats
+        val newSeatCount = showtime.availableSeats + seats
 
         showtimeRepository.save(
             showtime.copy(

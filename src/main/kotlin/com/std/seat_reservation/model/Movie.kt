@@ -17,5 +17,6 @@ data class Movie(
     val duration: String,
     val rating: Float,
     val releaseDate: LocalDate,
-    val imageUrl: String
+    val imageUrl: String,
+    val isFeatured: Boolean = false
 )

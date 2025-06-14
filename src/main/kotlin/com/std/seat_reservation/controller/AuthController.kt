@@ -2,8 +2,11 @@ package com.std.seat_reservation.controller
 
 import com.std.seat_reservation.dto.AuthRequest
 import com.std.seat_reservation.dto.AuthResponse
+import com.std.seat_reservation.dto.PasswordResetRequest
+import com.std.seat_reservation.dto.ProfileUpdateRequest
 import com.std.seat_reservation.service.AuthService
 import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,11 +35,19 @@ class AuthController(
         return authService.login(authRequest)
     }
 
-    @PostMapping("/reset-password")
-    fun resetPassword(
-        @RequestBody authRequest: AuthRequest
+    @PostMapping("/update-profile")
+    fun updateProfile(
+        @RequestBody request: ProfileUpdateRequest
+    ) = authService.updateProfile(request)
+
+
+    @PostMapping("/change-password")
+    fun changePassword(
+        @RequestBody request: PasswordResetRequest
     ): AuthResponse {
-        logger.info("Got in password reset controller with request $authRequest")
-        return authService.resetPassword(authRequest)
+        logger.info("Got in password reset controller with request $request")
+        return authService.changePassword(request)
     }
+
+
 }

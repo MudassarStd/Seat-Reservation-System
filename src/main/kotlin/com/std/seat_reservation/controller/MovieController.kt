@@ -6,6 +6,7 @@ import com.std.seat_reservation.model.Review
 import com.std.seat_reservation.service.MovieService
 import com.std.seat_reservation.service.ReviewService
 import com.std.seat_reservation.service.ShowtimeService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -35,6 +36,11 @@ class MovieController(
         @RequestParam(required = false) releaseDate: LocalDate?
     ) = movieService.getAll(genre, rating, releaseDate)
 
+    @GetMapping("/featured")
+    fun getAllFeatured() = movieService.getAllFeatured()
+
+    @PutMapping("{id}/feature")
+    fun featureMovie(@RequestBody(required = true) isFeatured: Boolean, @PathVariable id: Long) = movieService.featureMovie(id, isFeatured)
 
     // **************************************************************************
     // **************************** Nested Resources ****************************
@@ -47,11 +53,10 @@ class MovieController(
     fun getById(@PathVariable id: Long) = movieService.getById(id)
 
     @PostMapping("/{id}/reviews")
-    fun addReview(@PathVariable id: Long, @RequestBody review: ReviewRequest) = reviewService.addReview(id, review)
+    fun addReview(@Valid @PathVariable id: Long, @RequestBody review: ReviewRequest) = reviewService.addReview(id, review)
 
     @GetMapping("/{id}/reviews")
     fun getReviews(@PathVariable id: Long) = reviewService.getAllByMovie(id)
-
 
 //    @GetMapping("/recommendations")
 //    fun getRecommendations() = movieService.getRecommendations()

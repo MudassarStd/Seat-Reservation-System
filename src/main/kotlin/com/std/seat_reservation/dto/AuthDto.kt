@@ -3,11 +3,21 @@ package com.std.seat_reservation.dto
 import com.std.seat_reservation.model.User
 
 data class AuthRequest(
-    val username: String? = null,
+    val name: String? = null,
     val email: String,
     val password: String
 )
 
+data class ProfileUpdateRequest(
+    val name: String,
+    val email: String
+)
+
+data class PasswordResetRequest(
+    val currentPassword: String,
+    val email: String,
+    val newPassword: String,
+)
 
 // consider adding token expire time for client to discard it on expiry
 data class AuthResponse(

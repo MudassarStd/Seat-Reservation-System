@@ -16,7 +16,8 @@ data class Booking(
     val showtime: Showtime,
     val seats: Int,
     @Enumerated
-    var status: BookingStatus = BookingStatus.Booked
+    var status: BookingStatus = BookingStatus.Booked,
+    val ticketNumber: Int
 )
 
 enum class BookingStatus {

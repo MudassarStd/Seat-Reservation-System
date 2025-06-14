@@ -28,6 +28,9 @@ class MovieService(
         }
     }
 
+    fun getAllFeatured() = movieRepository.findAll().filter { movie -> movie.isFeatured }
+
+
     fun getById(id: Long) = movieRepository.findById(id).orElseThrow { ResourceNotFoundException("Movie Not found for given id") }
 
     fun getByNameSearch(query: String) = movieRepository.findAll().filter { it.title.contains(query) }
@@ -41,7 +44,8 @@ class MovieService(
                 duration = movie.duration,
                 rating = movie.rating,
                 genre = movie.genre,
-                releaseDate = movie.releaseDate
+                releaseDate = movie.releaseDate,
+                isFeatured = movie.isFeatured
             )
         )
     }
@@ -56,6 +60,13 @@ class MovieService(
 
     fun addBatch(movies: List<Movie>) = movieRepository.saveAll(movies)
 
+    fun featureMovie(id: Long, featured: Boolean) {
+        val movie = getById(id)
+        val updated = movie.copy(
+            isFeatured = featured
+        )
+        movieRepository.save(updated)
+    }
 
 //    fun getRecommendations(): List<Movie> {
 //        return emptyList()

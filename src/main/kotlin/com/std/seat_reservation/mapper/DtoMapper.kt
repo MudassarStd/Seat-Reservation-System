@@ -2,16 +2,19 @@ package com.std.seat_reservation.mapper
 
 import com.std.seat_reservation.dto.*
 import com.std.seat_reservation.model.*
+import com.std.seat_reservation.util.random8DigitId
 
 fun AuthRequest.toUser(hashedPassword: String) = User(
     email = this.email,
+    name = name!!,
     password = hashedPassword
 )
 
 fun BookingRequest.toBooking(user: User, showtime: Showtime) = Booking(
     user = user,
     showtime = showtime,
-    seats = this.seats
+    seats = this.seats,
+    ticketNumber = random8DigitId()
 )
 
 fun ShowtimeRequest.toShowtime(movie: Movie, theater: String) = Showtime(
@@ -36,9 +39,16 @@ fun Showtime.toResponse(): ShowtimeResponse {
 }
 
 fun Booking.toBookingResponse() = BookingResponse(
+    id = this.id,
     seats = this.seats,
     status = this.status,
-    showtime = this.showtime.toResponse()
+    ticketNumber = this.ticketNumber,
+    showStartTime = this.showtime.startTime,
+    showEndTime = this.showtime.endTime,
+    showDate = this.showtime.date,
+    userEmail = this.user.email,
+    movieTitle = this.showtime.movie.title,
+    theater = this.showtime.theater
 )
 
 fun ReviewRequest.toReview(user: User, movie: Movie) = Review(

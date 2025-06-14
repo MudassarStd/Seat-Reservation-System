@@ -1,14 +1,12 @@
 package com.std.seat_reservation.service
 
-import com.std.seat_reservation.dto.AuthRequest
-import com.std.seat_reservation.dto.AuthResponse
-import com.std.seat_reservation.dto.UserResponse
-import com.std.seat_reservation.dto.toAuthResponse
+import com.std.seat_reservation.dto.*
 import com.std.seat_reservation.exception.ResourceNotFoundException
 import com.std.seat_reservation.mapper.toUser
 import com.std.seat_reservation.model.User
 import com.std.seat_reservation.repository.UserRepository
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -40,12 +38,20 @@ class AuthService(
 
     fun getCurrentAuthenticatedUser() = SecurityContextHolder.getContext().authentication.principal as User
 
-    fun resetPassword(authRequest: AuthRequest): AuthResponse {
-        val user = userRepository.findByEmail(authRequest.email) ?: throw ResourceNotFoundException("User for ${authRequest.email} does not exist")
-        val newPassword = bCryptPasswordEncoder.encode(authRequest.password)
+    fun updateProfile(request: ProfileUpdateRequest): String {
+        val user = userRepository.findByEmail(request.email) ?: throw ResourceNotFoundException("User for ${request.email} does not exist")
+        userRepository.save(user.copy(name = request.name, email = request.email))
+        return "Updated Successfully"
+    }
+
+    fun changePassword(request: PasswordResetRequest): AuthResponse {
+        val user = userRepository.findByEmail(request.email) ?: throw ResourceNotFoundException("User for ${request.email} does not exist")
+        if (!bCryptPasswordEncoder.matches(request.currentPassword, user.password)) throw BadCredentialsException("Incorrect current password")
+
+        val newPassword = bCryptPasswordEncoder.encode(request.newPassword)
         userRepository.save(user.copy(
             password = newPassword
         ))
-        return AuthResponse(token = jwtService.generateToken(authRequest.email), user.toAuthResponse())
+        return AuthResponse(token = jwtService.generateToken(request.email), user.toAuthResponse())
     }
 }
